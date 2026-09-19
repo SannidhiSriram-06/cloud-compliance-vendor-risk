@@ -4,6 +4,26 @@ This document provides cross-framework control mappings between AWS Security Hub
 
 ---
 
+## 0. Register Column Glossary & Provenance
+
+To maintain audit integrity and avoid overclaiming compliance coverage, risk register columns are partitioned into **AWS-Sourced Telemetry** (ground truth from live scanners) and **Analyst-Assigned Classifications** (indicative crosswalks and governance metadata):
+
+| Column | Provenance / Authority | Description & Basis |
+| :--- | :--- | :--- |
+| `Severity` | **AWS-Sourced** | Directly ingested from AWS Config / Security Hub normalized severity (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFORMATIONAL`). |
+| `ResourceID` | **AWS-Sourced** | Cloud identifier (IAM username, S3 bucket name, EBS volume ID, AWS Account ID) extracted directly from event payload. |
+| `Sources` | **AWS-Sourced** | Live ingestion channels (`AWS Config`, `AWS Security Hub`, or both if merged). |
+| `CIS_AWS_Benchmark` | **AWS-Sourced** | CIS control reference from Security Hub's `Compliance.RelatedRequirements` or Config rule specification. |
+| `CIS_Match` | **Classification** | `"exact"` where the CIS control number was taken directly from Security Hub `Compliance.RelatedRequirements` or matching Config rule; `"closest"` where mapped by topic analogy. |
+| `ISO_27001_2022` | **Analyst-Assigned** | Hand-built indicative crosswalk to ISO/IEC 27001:2022 Annex A control clauses. |
+| `NIST_CSF` | **Analyst-Assigned** | Hand-built indicative crosswalk to NIST Cybersecurity Framework (CSF v1.1 / v2.0) subcategories. |
+| `ISO_NIST_Basis` | **Classification** | Always `"analyst-assigned (indicative)"` to document that ISO/NIST columns represent a crosswalk rather than official AWS or ISO certifications. |
+| `Owner` | **Analyst-Assigned** | Assigned operational remediation team (`Identity & Access Team`, `Data Protection Team`, `SecOps / Network Team`, `Cloud Infrastructure Team`). |
+| `RemediationSLA_Days` | **Governance Policy** | Organizationally defined remediation timeline based on severity SLA matrix (Critical: 3d, High: 7d, Medium: 30d, Low: 90d). |
+| `ControlMapping` | **Telemetry/Logic** | `"MAPPED"` if recognized and assigned cross-framework controls; `"UNMAPPED"` if telemetry lacked rule mappings. |
+
+---
+
 ## 1. Compliance Crosswalk Matrix
 
 | AWS Finding / Resource | CIS AWS v1.4.0 Control | ISO 27001:2022 Control | ISO 27001:2013 Control | NIST CSF Control | Threat & Risk Impact | Remediation Action |
