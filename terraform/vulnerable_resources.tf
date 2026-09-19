@@ -98,14 +98,71 @@ resource "aws_security_group" "open_ssh_sg" {
   }
 }
 
+data "aws_ssm_parameter" "al2023_ami" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
+}
+
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+data "aws_subnet" "selected_default" {
+  id = data.aws_subnets.default.ids[0]
+}
+
 # ------------------------------------------------------------------------------
-# 3. Unencrypted EBS Volume
+# 3. Unencrypted EBS Volume & Demo EC2 Instance
 # Detectable by: CIS AWS Benchmark 2.2.1, AWS Config encrypted-volumes
 # Mappings: ISO 27001 A.8.24 (Use of Cryptography), NIST CSF PR.DS-1
 # ------------------------------------------------------------------------------
+resource "aws_security_group" "demo_instance_sg" {
+  count       = var.enable_vulnerable_demo_resources ? 1 : 0
+  name        = "${var.project_name}-isolated-instance-sg"
+  description = "Isolated security group with no ingress rules for demo instance"
+  vpc_id      = data.aws_vpc.default.id
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name         = "${var.project_name}-isolated-instance-sg"
+    DemoResource = "true"
+  }
+}
+
+resource "aws_instance" "demo_host" {
+  count                       = var.enable_vulnerable_demo_resources ? 1 : 0
+  ami                         = data.aws_ssm_parameter.al2023_ami.value
+  instance_type               = "t3.nano"
+  subnet_id                   = data.aws_subnet.selected_default.id
+  associate_public_ip_address = false
+  vpc_security_group_ids      = [aws_security_group.demo_instance_sg[0].id]
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
+  root_block_device {
+    encrypted = true
+  }
+
+  tags = {
+    Name         = "${var.project_name}-demo-host"
+    DemoResource = "true"
+  }
+}
+
 resource "aws_ebs_volume" "unencrypted_demo_volume" {
   count             = var.enable_vulnerable_demo_resources ? 1 : 0
-  availability_zone = data.aws_availability_zones.available.names[0]
+  availability_zone = aws_instance.demo_host[0].availability_zone
   size              = 1
   encrypted         = false # Explicitly unencrypted for demo
   type              = "gp3"
@@ -116,6 +173,13 @@ resource "aws_ebs_volume" "unencrypted_demo_volume" {
     RiskLevel         = "Medium"
     DemoResource      = "true"
   }
+}
+
+resource "aws_volume_attachment" "unencrypted_demo_attachment" {
+  count       = var.enable_vulnerable_demo_resources ? 1 : 0
+  device_name = "/dev/sdf"
+  volume_id   = aws_ebs_volume.unencrypted_demo_volume[0].id
+  instance_id = aws_instance.demo_host[0].id
 }
 
 # ------------------------------------------------------------------------------
@@ -145,5 +209,5 @@ resource "aws_iam_user_login_profile" "demo_user_login" {
   user                    = aws_iam_user.no_mfa_demo_user[0].name
   password_reset_required = false
   # Password generated for demonstration purposes
-  password_length         = 16
+  password_length = 16
 }

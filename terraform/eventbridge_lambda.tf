@@ -35,6 +35,11 @@ data "archive_file" "lambda_zip" {
   output_path = "${path.module}/lambda_risk_register.zip"
 }
 
+resource "aws_cloudwatch_log_group" "lambda_logs" {
+  name              = "/aws/lambda/${var.project_name}-risk-register-logger"
+  retention_in_days = 14
+}
+
 # Lambda Execution IAM Role
 resource "aws_iam_role" "lambda_role" {
   name = "${var.project_name}-risk-register-lambda-role"
@@ -63,11 +68,10 @@ resource "aws_iam_role_policy" "lambda_policy" {
       {
         Effect = "Allow"
         Action = [
-          "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "arn:aws:logs:*:*:*"
+        Resource = "${aws_cloudwatch_log_group.lambda_logs.arn}:*"
       },
       {
         Effect = "Allow"
@@ -82,11 +86,11 @@ resource "aws_iam_role_policy" "lambda_policy" {
         ]
       },
       {
-        Effect = "Allow"
-        Action = [
-          "securityhub:GetFindings",
-          "config:GetComplianceDetailsByConfigRule"
-        ]
+        # Resolves AWS::IAM::User unique IDs (AIDA...) to human-readable user names
+        # for cross-source deduplication. AWS Config BatchGetResourceConfig does not
+        # support resource-level ARN constraints and requires Resource = "*".
+        Effect   = "Allow"
+        Action   = ["config:BatchGetResourceConfig"]
         Resource = "*"
       }
     ]
@@ -112,38 +116,67 @@ resource "aws_lambda_function" "risk_register_logger" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "lambda_logs" {
-  name              = "/aws/lambda/${aws_lambda_function.risk_register_logger.function_name}"
-  retention_in_days = 14
-}
-
-# EventBridge Rule: Triggered on Security Hub Findings & AWS Config Compliance changes
-resource "aws_cloudwatch_event_rule" "compliance_findings_rule" {
-  name        = "${var.project_name}-compliance-evaluations"
-  description = "Captures AWS Security Hub and AWS Config compliance failures and routes to Risk Register Lambda"
+# EventBridge Rule A: Security Hub FAILED Findings (Conditional on enable_security_hub)
+resource "aws_cloudwatch_event_rule" "securityhub_findings_rule" {
+  count       = var.enable_security_hub ? 1 : 0
+  name        = "${var.project_name}-securityhub-findings"
+  description = "Captures AWS Security Hub FAILED compliance findings and routes to Risk Register Lambda"
 
   event_pattern = jsonencode({
-    source = [
-      "aws.securityhub",
-      "aws.config"
-    ]
-    detail-type = [
-      "Security Hub Findings - Imported",
-      "Config Rules Compliance Change"
-    ]
+    source      = ["aws.securityhub"]
+    detail-type = ["Security Hub Findings - Imported"]
+    detail = {
+      findings = {
+        Compliance = {
+          Status = ["FAILED"]
+        }
+      }
+    }
   })
 }
 
-resource "aws_cloudwatch_event_target" "lambda_target" {
-  rule      = aws_cloudwatch_event_rule.compliance_findings_rule.name
-  target_id = "TriggerRiskRegisterLambda"
+resource "aws_cloudwatch_event_target" "securityhub_lambda_target" {
+  count     = var.enable_security_hub ? 1 : 0
+  rule      = aws_cloudwatch_event_rule.securityhub_findings_rule[0].name
+  target_id = "TriggerRiskRegisterLambdaSecurityHub"
   arn       = aws_lambda_function.risk_register_logger.arn
 }
 
-resource "aws_lambda_permission" "allow_eventbridge" {
-  statement_id  = "AllowExecutionFromEventBridge"
+resource "aws_lambda_permission" "allow_eventbridge_securityhub" {
+  count         = var.enable_security_hub ? 1 : 0
+  statement_id  = "AllowExecutionFromEventBridgeSecurityHub"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.risk_register_logger.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.compliance_findings_rule.arn
+  source_arn    = aws_cloudwatch_event_rule.securityhub_findings_rule[0].arn
+}
+
+# EventBridge Rule B: AWS Config NON_COMPLIANT Evaluations
+resource "aws_cloudwatch_event_rule" "config_compliance_rule" {
+  name        = "${var.project_name}-config-compliance"
+  description = "Captures AWS Config NON_COMPLIANT rule evaluations and routes to Risk Register Lambda"
+
+  event_pattern = jsonencode({
+    source      = ["aws.config"]
+    detail-type = ["Config Rules Compliance Change"]
+    detail = {
+      newEvaluationResult = {
+        complianceType = ["NON_COMPLIANT"]
+      }
+    }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "config_lambda_target" {
+  rule      = aws_cloudwatch_event_rule.config_compliance_rule.name
+  target_id = "TriggerRiskRegisterLambdaConfig"
+  arn       = aws_lambda_function.risk_register_logger.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge_config" {
+  statement_id  = "AllowExecutionFromEventBridgeConfig"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.risk_register_logger.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.config_compliance_rule.arn
 }

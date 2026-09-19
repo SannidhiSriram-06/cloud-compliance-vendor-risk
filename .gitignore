@@ -7,6 +7,11 @@ crash.*.log
 !*.tfvars.example
 .terraform/
 .terraform.lock.hcl
+tfplan
+*.tfplan
+tfplan*
+destroyplan
+*destroy*
 override.tf
 override.tf.json
 *_override.tf
@@ -44,3 +49,14 @@ Thumbs.db
 # Output exports
 risk_register_export.csv
 vendor_report_output.json
+
+# Local / Agent scratch docs
+AGENTS.md
+CLAUDE.md
+docs/context.md
+
+# Build & exported evidence
+*.zip
+*.pdf
+risk_register.json
+CIS AWS Foundations Benchmark*.csv

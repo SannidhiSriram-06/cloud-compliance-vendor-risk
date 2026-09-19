@@ -18,6 +18,8 @@ resource "aws_s3_bucket_public_access_block" "config_delivery_pab" {
   restrict_public_buckets = true
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "config_delivery_encryption" {
   bucket = aws_s3_bucket.config_delivery_bucket.id
 
@@ -26,6 +28,43 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "config_delivery_e
       sse_algorithm = "AES256"
     }
   }
+}
+
+resource "aws_s3_bucket_policy" "config_delivery_policy" {
+  bucket     = aws_s3_bucket.config_delivery_bucket.id
+  depends_on = [aws_s3_bucket_public_access_block.config_delivery_pab]
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AWSConfigBucketPermissionsCheck"
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action = [
+          "s3:GetBucketAcl",
+          "s3:ListBucket"
+        ]
+        Resource = aws_s3_bucket.config_delivery_bucket.arn
+      },
+      {
+        Sid    = "AWSConfigBucketDelivery"
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "${aws_s3_bucket.config_delivery_bucket.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/Config/*"
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl" = "bucket-owner-full-control"
+          }
+        }
+      }
+    ]
+  })
 }
 
 # IAM Role for AWS Config
@@ -91,7 +130,10 @@ resource "aws_config_configuration_recorder" "recorder" {
 resource "aws_config_delivery_channel" "delivery" {
   name           = "${var.project_name}-delivery-channel"
   s3_bucket_name = aws_s3_bucket.config_delivery_bucket.bucket
-  depends_on     = [aws_config_configuration_recorder.recorder]
+  depends_on = [
+    aws_config_configuration_recorder.recorder,
+    aws_s3_bucket_policy.config_delivery_policy
+  ]
 }
 
 resource "aws_config_configuration_recorder_status" "recorder_status" {

@@ -21,9 +21,10 @@ output "lambda_function_name" {
 output "vulnerable_resources" {
   description = "Identifiers of deliberately misconfigured demo resources"
   value = var.enable_vulnerable_demo_resources ? {
-    public_s3_bucket      = aws_s3_bucket.public_demo_bucket[0].bucket
-    open_ssh_sec_group    = aws_security_group.open_ssh_sg[0].id
-    unencrypted_ebs_id    = aws_ebs_volume.unencrypted_demo_volume[0].id
-    iam_user_without_mfa  = aws_iam_user.no_mfa_demo_user[0].name
+    public_s3_bucket     = aws_s3_bucket.public_demo_bucket[0].bucket
+    open_ssh_sec_group   = aws_security_group.open_ssh_sg[0].id
+    unencrypted_ebs_id   = aws_ebs_volume.unencrypted_demo_volume[0].id
+    demo_instance_id     = aws_instance.demo_host[0].id
+    iam_user_without_mfa = aws_iam_user.no_mfa_demo_user[0].name
   } : null
 }
