@@ -1,0 +1,102 @@
+{
+  "version": "0",
+  "id": "event-encrypted-volumes",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-20T00:00:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:config:us-east-1:123456789012:config-rule/config-rule-n1npts/finding/f3c86ed19342e4e169c49dbaec5063c576bba211"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:config:us-east-1:123456789012:config-rule/config-rule-n1npts/finding/f3c86ed19342e4e169c49dbaec5063c576bba211",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/config",
+        "ProductName": "Config",
+        "CompanyName": "AWS",
+        "Region": "us-east-1",
+        "GeneratorId": "arn:aws:config:us-east-1:123456789012:config-rule/config-rule-n1npts",
+        "AwsAccountId": "123456789012",
+        "Types": [
+          "Software and Configuration Checks"
+        ],
+        "CreatedAt": "2026-09-19T18:30:58.096Z",
+        "UpdatedAt": "2026-09-19T18:30:58.096Z",
+        "Severity": {
+          "Label": "MEDIUM",
+          "Normalized": 40
+        },
+        "Title": "encrypted-volumes",
+        "Description": "This finding is created for a resource compliance change for config rule: encrypted-volumes",
+        "ProductFields": {
+          "aws/securityhub/ProductName": "Config",
+          "aws/securityhub/CompanyName": "AWS",
+          "aws/securityhub/FindingId": "arn:aws:securityhub:us-east-1::product/aws/config/arn:aws:config:us-east-1:123456789012:config-rule/config-rule-n1npts/finding/f3c86ed19342e4e169c49dbaec5063c576bba211",
+          "aws/config/ConfigRuleArn": "arn:aws:config:us-east-1:123456789012:config-rule/config-rule-n1npts",
+          "aws/config/ConfigRuleName": "encrypted-volumes",
+          "aws/config/ConfigComplianceType": "NON_COMPLIANT"
+        },
+        "Resources": [
+          {
+            "Type": "AwsEc2Volume",
+            "Id": "arn:aws:ec2:us-east-1:123456789012:volume/vol-0d35a3ca9a7c6de4b",
+            "Partition": "aws",
+            "Region": "us-east-1",
+            "Provider": "AWS",
+            "Owner": {
+              "Account": {
+                "Id": "123456789012"
+              }
+            },
+            "Tags": {
+              "DemoResource": "true",
+              "ComplianceFinding": "EBS-UNENCRYPTED",
+              "Project": "cloud-compliance-demo",
+              "ManagedBy": "Terraform",
+              "Environment": "sandbox",
+              "Purpose": "Security-Compliance-Demo",
+              "RiskLevel": "Medium",
+              "Name": "cloud-compliance-demo-unencrypted-volume"
+            },
+            "Details": {
+              "AwsEc2Volume": {
+                "CreateTime": "2026-09-19T18:29:37.150Z",
+                "Encrypted": false,
+                "Size": 1,
+                "Status": "in-use",
+                "Attachments": [
+                  {
+                    "AttachTime": "2026-09-19T18:29:59.000Z",
+                    "DeleteOnTermination": false,
+                    "InstanceId": "i-03e45fd81985d858b",
+                    "Status": "attached"
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "Compliance": {
+          "Status": "FAILED"
+        },
+        "WorkflowState": "NEW",
+        "Workflow": {
+          "Status": "NEW"
+        },
+        "RecordState": "ACTIVE",
+        "FindingProviderFields": {
+          "Severity": {
+            "Label": "MEDIUM"
+          },
+          "Types": [
+            "Software and Configuration Checks"
+          ]
+        },
+        "ProcessedAt": "2026-09-19T18:31:24.201Z"
+      }
+    ]
+  }
+}

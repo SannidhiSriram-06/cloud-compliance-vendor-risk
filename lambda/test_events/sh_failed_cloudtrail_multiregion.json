@@ -1,0 +1,95 @@
+{
+  "version": "0",
+  "id": "event-cloudtrail-1",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-20T00:00:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:securityhub:us-east-1:123456789012:security-control/CloudTrail.1/finding/7013eb5a-de70-4607-ae48-9e39eef099ee"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:securityhub:us-east-1:123456789012:security-control/CloudTrail.1/finding/7013eb5a-de70-4607-ae48-9e39eef099ee",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/securityhub",
+        "ProductName": "Security Hub",
+        "CompanyName": "AWS",
+        "Region": "us-east-1",
+        "GeneratorId": "security-control/CloudTrail.1",
+        "AwsAccountId": "123456789012",
+        "Types": [
+          "Software and Configuration Checks/Industry and Regulatory Standards"
+        ],
+        "FirstObservedAt": "2026-09-19T18:30:32.841Z",
+        "LastObservedAt": "2026-09-19T18:30:32.841Z",
+        "CreatedAt": "2026-09-19T18:31:05.465Z",
+        "UpdatedAt": "2026-09-19T18:31:05.465Z",
+        "Severity": {
+          "Label": "HIGH",
+          "Normalized": 70,
+          "Original": "HIGH"
+        },
+        "Title": "CloudTrail should be enabled and configured with at least one multi-Region trail that includes read and write management events",
+        "Description": "This AWS control checks that there is at least one multi-region AWS CloudTrail trail includes read and write management events.",
+        "Remediation": {
+          "Recommendation": {
+            "Text": "To create a new multi-Region trail in CloudTrail, see \"Creating a trail\" in the AWS CloudTrail User Guide. Use the following values: |Field|Value| |---|---| |Additional settings, Log file validation|Enabled| |Choose log events, Management events, API activity|Read and Write. Clear check boxes for exclusions.| To update an existing trail, see \"Updating a trail\" in the AWS CloudTrail User Guide. In Management events, for API activity, choose Read and Write.",
+            "Url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-create-a-trail-using-the-console-first-time.html"
+          }
+        },
+        "ProductFields": {
+          "RelatedAWSResources:0/name": "securityhub-multi-region-cloud-trail-enabled-d70fd97a",
+          "RelatedAWSResources:0/type": "AWS::Config::ConfigRule",
+          "aws/securityhub/ProductName": "Security Hub",
+          "aws/securityhub/CompanyName": "AWS",
+          "Resources:0/Id": "arn:aws:iam::123456789012:root",
+          "aws/securityhub/FindingId": "arn:aws:securityhub:us-east-1::product/aws/securityhub/arn:aws:securityhub:us-east-1:123456789012:security-control/CloudTrail.1/finding/7013eb5a-de70-4607-ae48-9e39eef099ee"
+        },
+        "Resources": [
+          {
+            "Type": "AwsAccount",
+            "Id": "AWS::::Account:123456789012",
+            "Partition": "aws",
+            "Region": "us-east-1",
+            "Provider": "AWS",
+            "Owner": {
+              "Account": {
+                "Id": "123456789012"
+              }
+            }
+          }
+        ],
+        "Compliance": {
+          "Status": "FAILED",
+          "RelatedRequirements": [
+            "CIS AWS Foundations Benchmark v1.4.0/3.1"
+          ],
+          "SecurityControlId": "CloudTrail.1",
+          "AssociatedStandards": [
+            {
+              "StandardsId": "standards/cis-aws-foundations-benchmark/v/1.4.0"
+            }
+          ]
+        },
+        "WorkflowState": "NEW",
+        "Workflow": {
+          "Status": "NEW"
+        },
+        "RecordState": "ACTIVE",
+        "FindingProviderFields": {
+          "Severity": {
+            "Label": "HIGH",
+            "Original": "HIGH"
+          },
+          "Types": [
+            "Software and Configuration Checks/Industry and Regulatory Standards"
+          ]
+        },
+        "ProcessedAt": "2026-09-19T18:31:29.659Z"
+      }
+    ]
+  }
+}

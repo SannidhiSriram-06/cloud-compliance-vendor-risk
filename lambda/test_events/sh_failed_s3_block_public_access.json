@@ -1,0 +1,112 @@
+{
+  "version": "0",
+  "id": "event-s3-8",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-20T00:00:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:securityhub:us-east-1:123456789012:security-control/S3.8/finding/480354fb-8b4f-49e9-b6c1-987d585cba10"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:securityhub:us-east-1:123456789012:security-control/S3.8/finding/480354fb-8b4f-49e9-b6c1-987d585cba10",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/securityhub",
+        "ProductName": "Security Hub",
+        "CompanyName": "AWS",
+        "Region": "us-east-1",
+        "GeneratorId": "security-control/S3.8",
+        "AwsAccountId": "123456789012",
+        "Types": [
+          "Software and Configuration Checks/Industry and Regulatory Standards"
+        ],
+        "FirstObservedAt": "2026-09-19T18:30:53.270Z",
+        "LastObservedAt": "2026-09-19T18:30:53.270Z",
+        "CreatedAt": "2026-09-19T18:31:28.168Z",
+        "UpdatedAt": "2026-09-19T18:31:28.168Z",
+        "Severity": {
+          "Label": "HIGH",
+          "Normalized": 70,
+          "Original": "HIGH"
+        },
+        "Title": "S3 general purpose buckets should block public access",
+        "Description": "This control checks whether an Amazon S3 general purpose bucket blocks public access at the bucket level. The control fails if any of the following settings are set to false: ignorePublicAcls, blockPublicPolicy, blockPublicAcls, restrictPublicBuckets.",
+        "Remediation": {
+          "Recommendation": {
+            "Text": "For information on how to remove public access at a bucket level, see \"Blocking public access to your Amazon S3 storage\" in the Amazon S3 User Guide.",
+            "Url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html"
+          }
+        },
+        "ProductFields": {
+          "RelatedAWSResources:0/name": "securityhub-s3-bucket-level-public-access-prohibited-bae166a3",
+          "RelatedAWSResources:0/type": "AWS::Config::ConfigRule",
+          "aws/securityhub/ProductName": "Security Hub",
+          "aws/securityhub/CompanyName": "AWS",
+          "aws/securityhub/annotation": "PublicAccessBlockConfigurations are incorrect for block_public_acls: false ignore_public_acls: false block_public_policy: false restrict_public_buckets false",
+          "Resources:0/Id": "arn:aws:s3:::cloud-compliance-demo-public-demo-oxcof074",
+          "aws/securityhub/FindingId": "arn:aws:securityhub:us-east-1::product/aws/securityhub/arn:aws:securityhub:us-east-1:123456789012:security-control/S3.8/finding/480354fb-8b4f-49e9-b6c1-987d585cba10"
+        },
+        "Resources": [
+          {
+            "Type": "AwsS3Bucket",
+            "Id": "arn:aws:s3:::cloud-compliance-demo-public-demo-oxcof074",
+            "Partition": "aws",
+            "Region": "us-east-1",
+            "Provider": "AWS",
+            "Owner": {
+              "Account": {
+                "Id": "123456789012"
+              }
+            },
+            "Tags": {
+              "ComplianceFinding": "S3-PUBLIC-READ",
+              "DemoResource": "true",
+              "Project": "cloud-compliance-demo",
+              "ManagedBy": "Terraform",
+              "Environment": "sandbox",
+              "Purpose": "Security-Compliance-Demo",
+              "RiskLevel": "High"
+            },
+            "Details": {
+              "AwsS3Bucket": {
+                "OwnerId": "de36c19bf628373a7851d915846263a80106aa29a24ece5fd9bb9d6b5d3ece48",
+                "CreatedAt": "2026-09-19T18:09:32.000Z",
+                "Name": "cloud-compliance-demo-public-demo-oxcof074"
+              }
+            }
+          }
+        ],
+        "Compliance": {
+          "Status": "FAILED",
+          "RelatedRequirements": [
+            "CIS AWS Foundations Benchmark v1.4.0/2.1.5"
+          ],
+          "SecurityControlId": "S3.8",
+          "AssociatedStandards": [
+            {
+              "StandardsId": "standards/cis-aws-foundations-benchmark/v/1.4.0"
+            }
+          ]
+        },
+        "WorkflowState": "NEW",
+        "Workflow": {
+          "Status": "NEW"
+        },
+        "RecordState": "ACTIVE",
+        "FindingProviderFields": {
+          "Severity": {
+            "Label": "HIGH",
+            "Original": "HIGH"
+          },
+          "Types": [
+            "Software and Configuration Checks/Industry and Regulatory Standards"
+          ]
+        },
+        "ProcessedAt": "2026-09-19T18:32:28.485Z"
+      }
+    ]
+  }
+}

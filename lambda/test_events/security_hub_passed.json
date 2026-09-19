@@ -1,0 +1,38 @@
+{
+  "version": "0",
+  "id": "test-sec-hub-passed",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-19T05:30:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:s3:::compliant-bucket"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:securityhub:us-east-1:123456789012:subscription/cis-aws-foundations-benchmark/v/1.4.0/2.1.5/finding/passed-1",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/securityhub",
+        "GeneratorId": "cis-aws-foundations-benchmark/v/1.4.0/2.1.5",
+        "AwsAccountId": "123456789012",
+        "CreatedAt": "2026-09-19T05:30:00.000Z",
+        "Severity": {
+          "Label": "INFORMATIONAL"
+        },
+        "Title": "2.1.5 Ensure that S3 Buckets are configured with 'Block Public Access'",
+        "Description": "The S3 bucket compliant-bucket has public access block enabled.",
+        "Resources": [
+          {
+            "Type": "AwsS3Bucket",
+            "Id": "arn:aws:s3:::compliant-bucket"
+          }
+        ],
+        "Compliance": {
+          "Status": "PASSED"
+        }
+      }
+    ]
+  }
+}

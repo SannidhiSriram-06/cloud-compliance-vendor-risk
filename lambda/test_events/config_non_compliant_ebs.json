@@ -1,0 +1,31 @@
+{
+  "version": "0",
+  "id": "test-config-non-compliant-ebs",
+  "detail-type": "Config Rules Compliance Change",
+  "source": "aws.config",
+  "account": "123456789012",
+  "time": "2026-09-19T05:30:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "vol-0123456789abcdef0"
+  ],
+  "detail": {
+    "configRuleName": "encrypted-volumes",
+    "resourceType": "AWS::EC2::Volume",
+    "resourceId": "vol-0123456789abcdef0",
+    "awsRegion": "us-east-1",
+    "awsAccountId": "123456789012",
+    "newEvaluationResult": {
+      "evaluationResultIdentifier": {
+        "evaluationResultQualifier": {
+          "configRuleName": "encrypted-volumes",
+          "resourceType": "AWS::EC2::Volume",
+          "resourceId": "vol-0123456789abcdef0"
+        },
+        "orderingTimestamp": "2026-09-19T05:30:00.000Z"
+      },
+      "complianceType": "NON_COMPLIANT",
+      "resultRecordedTime": "2026-09-19T05:30:00.000Z"
+    }
+  }
+}

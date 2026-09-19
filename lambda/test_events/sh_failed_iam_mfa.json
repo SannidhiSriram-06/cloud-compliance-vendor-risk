@@ -1,0 +1,103 @@
+{
+  "version": "0",
+  "id": "event-iam-5",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-20T00:00:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:securityhub:us-east-1:123456789012:security-control/IAM.5/finding/6316e6ee-2a96-45f5-ad7c-2569bfc873b8"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:securityhub:us-east-1:123456789012:security-control/IAM.5/finding/6316e6ee-2a96-45f5-ad7c-2569bfc873b8",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/securityhub",
+        "ProductName": "Security Hub",
+        "CompanyName": "AWS",
+        "Region": "us-east-1",
+        "GeneratorId": "security-control/IAM.5",
+        "AwsAccountId": "123456789012",
+        "Types": [
+          "Software and Configuration Checks/Industry and Regulatory Standards"
+        ],
+        "FirstObservedAt": "2026-09-19T18:30:32.807Z",
+        "LastObservedAt": "2026-09-19T18:30:32.807Z",
+        "CreatedAt": "2026-09-19T18:31:48.814Z",
+        "UpdatedAt": "2026-09-19T18:31:48.814Z",
+        "Severity": {
+          "Label": "MEDIUM",
+          "Normalized": 40,
+          "Original": "MEDIUM"
+        },
+        "Title": "MFA should be enabled for all IAM users that have a console password",
+        "Description": "This AWS control checks whether AWS Multi-Factor Authentication (MFA) is enabled for all AWS Identity and Access Management (IAM) users that use a console password.",
+        "Remediation": {
+          "Recommendation": {
+            "Text": "To add MFA for IAM users, see \"Using multi-factor authentication (MFA) in AWS\" in the IAM User Guide.",
+            "Url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html"
+          }
+        },
+        "ProductFields": {
+          "RelatedAWSResources:0/name": "securityhub-mfa-enabled-for-iam-console-access-92efc31b",
+          "RelatedAWSResources:0/type": "AWS::Config::ConfigRule",
+          "aws/securityhub/ProductName": "Security Hub",
+          "aws/securityhub/CompanyName": "AWS",
+          "Resources:0/Id": "arn:aws:iam::123456789012:user/cloud-compliance-demo-contractor-no-mfa",
+          "aws/securityhub/FindingId": "arn:aws:securityhub:us-east-1::product/aws/securityhub/arn:aws:securityhub:us-east-1:123456789012:security-control/IAM.5/finding/6316e6ee-2a96-45f5-ad7c-2569bfc873b8"
+        },
+        "Resources": [
+          {
+            "Type": "AwsIamUser",
+            "Id": "arn:aws:iam::123456789012:user/cloud-compliance-demo-contractor-no-mfa",
+            "Partition": "aws",
+            "Region": "us-east-1",
+            "Provider": "AWS",
+            "Owner": {
+              "Account": {
+                "Id": "123456789012"
+              }
+            },
+            "Details": {
+              "AwsIamUser": {
+                "CreateDate": "2026-09-19T18:09:31.000Z",
+                "Path": "/",
+                "UserId": "AIDAXWYOPVPW3HVOZJVTW",
+                "UserName": "cloud-compliance-demo-contractor-no-mfa"
+              }
+            }
+          }
+        ],
+        "Compliance": {
+          "Status": "FAILED",
+          "RelatedRequirements": [
+            "CIS AWS Foundations Benchmark v1.4.0/1.10"
+          ],
+          "SecurityControlId": "IAM.5",
+          "AssociatedStandards": [
+            {
+              "StandardsId": "standards/cis-aws-foundations-benchmark/v/1.4.0"
+            }
+          ]
+        },
+        "WorkflowState": "NEW",
+        "Workflow": {
+          "Status": "NEW"
+        },
+        "RecordState": "ACTIVE",
+        "FindingProviderFields": {
+          "Severity": {
+            "Label": "MEDIUM",
+            "Original": "MEDIUM"
+          },
+          "Types": [
+            "Software and Configuration Checks/Industry and Regulatory Standards"
+          ]
+        },
+        "ProcessedAt": "2026-09-19T18:32:11.240Z"
+      }
+    ]
+  }
+}

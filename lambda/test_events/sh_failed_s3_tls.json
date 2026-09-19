@@ -1,0 +1,111 @@
+{
+  "version": "0",
+  "id": "event-s3-5-public-demo",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-20T00:00:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:securityhub:us-east-1:123456789012:security-control/S3.5/finding/c9571292-d3fc-4be7-9349-36d18211fb2f"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:securityhub:us-east-1:123456789012:security-control/S3.5/finding/c9571292-d3fc-4be7-9349-36d18211fb2f",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/securityhub",
+        "ProductName": "Security Hub",
+        "CompanyName": "AWS",
+        "Region": "us-east-1",
+        "GeneratorId": "security-control/S3.5",
+        "AwsAccountId": "123456789012",
+        "Types": [
+          "Software and Configuration Checks/Industry and Regulatory Standards"
+        ],
+        "FirstObservedAt": "2026-09-19T18:30:53.373Z",
+        "LastObservedAt": "2026-09-19T18:30:53.373Z",
+        "CreatedAt": "2026-09-19T18:31:56.622Z",
+        "UpdatedAt": "2026-09-19T18:31:56.622Z",
+        "Severity": {
+          "Label": "MEDIUM",
+          "Normalized": 40,
+          "Original": "MEDIUM"
+        },
+        "Title": "S3 general purpose buckets should require requests to use TLS",
+        "Description": "This control checks whether an Amazon S3 general purpose bucket has a policy that requires requests to use TLS. The control fails if the bucket policy doesn't require requests to use TLS.",
+        "Remediation": {
+          "Recommendation": {
+            "Text": "To update an Amazon S3 bucket policy to deny nonsecure transport, see \"Adding a bucket policy by using the Amazon S3 console\" in the Amazon Simple Storage Service User Guide. Add a policy statement similar to the one in the following policy. Replace amzn-s3-demo-bucket with the name of the bucket you're modifying.",
+            "Url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/add-bucket-policy.html"
+          }
+        },
+        "ProductFields": {
+          "RelatedAWSResources:0/name": "securityhub-s3-bucket-ssl-requests-only-55c8a7cd",
+          "RelatedAWSResources:0/type": "AWS::Config::ConfigRule",
+          "aws/securityhub/ProductName": "Security Hub",
+          "aws/securityhub/CompanyName": "AWS",
+          "Resources:0/Id": "arn:aws:s3:::cloud-compliance-demo-public-demo-oxcof074",
+          "aws/securityhub/FindingId": "arn:aws:securityhub:us-east-1::product/aws/securityhub/arn:aws:securityhub:us-east-1:123456789012:security-control/S3.5/finding/c9571292-d3fc-4be7-9349-36d18211fb2f"
+        },
+        "Resources": [
+          {
+            "Type": "AwsS3Bucket",
+            "Id": "arn:aws:s3:::cloud-compliance-demo-public-demo-oxcof074",
+            "Partition": "aws",
+            "Region": "us-east-1",
+            "Provider": "AWS",
+            "Owner": {
+              "Account": {
+                "Id": "123456789012"
+              }
+            },
+            "Tags": {
+              "ComplianceFinding": "S3-PUBLIC-READ",
+              "DemoResource": "true",
+              "Project": "cloud-compliance-demo",
+              "ManagedBy": "Terraform",
+              "Environment": "sandbox",
+              "Purpose": "Security-Compliance-Demo",
+              "RiskLevel": "High"
+            },
+            "Details": {
+              "AwsS3Bucket": {
+                "OwnerId": "de36c19bf628373a7851d915846263a80106aa29a24ece5fd9bb9d6b5d3ece48",
+                "CreatedAt": "2026-09-19T18:09:32.000Z",
+                "Name": "cloud-compliance-demo-public-demo-oxcof074"
+              }
+            }
+          }
+        ],
+        "Compliance": {
+          "Status": "FAILED",
+          "RelatedRequirements": [
+            "CIS AWS Foundations Benchmark v1.4.0/2.1.2"
+          ],
+          "SecurityControlId": "S3.5",
+          "AssociatedStandards": [
+            {
+              "StandardsId": "standards/cis-aws-foundations-benchmark/v/1.4.0"
+            }
+          ]
+        },
+        "WorkflowState": "NEW",
+        "Workflow": {
+          "Status": "NEW"
+        },
+        "RecordState": "ACTIVE",
+        "FindingProviderFields": {
+          "Severity": {
+            "Label": "MEDIUM",
+            "Original": "MEDIUM"
+          },
+          "Types": [
+            "Software and Configuration Checks/Industry and Regulatory Standards"
+          ]
+        },
+        "ProcessedAt": "2026-09-19T18:32:38.584Z"
+      }
+    ]
+  }
+}
