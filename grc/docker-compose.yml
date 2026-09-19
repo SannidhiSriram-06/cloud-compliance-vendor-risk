@@ -11,7 +11,7 @@ services:
       - ../vendor-risk:/data/vendor-risk:ro
     environment:
       - FLASK_ENV=production
-      - RISK_REGISTER_FILE=/data/lambda/sample_risk_register.json
+      - RISK_REGISTER_FILE=/data/lambda/live_risk_register_sample.json
       - VENDOR_ASSESSMENT_FILE=/data/vendor-risk/sample_vendor_assessment.json
     command: >
       sh -c "pip install --no-cache-dir flask tabulate && python app.py"

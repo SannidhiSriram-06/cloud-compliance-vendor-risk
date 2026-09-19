@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 RISK_REGISTER_FILE = os.environ.get(
     "RISK_REGISTER_FILE",
-    os.path.join(os.path.dirname(__file__), "../../lambda/sample_risk_register.json")
+    os.path.join(os.path.dirname(__file__), "../../lambda/live_risk_register_sample.json")
 )
 VENDOR_ASSESSMENT_FILE = os.environ.get(
     "VENDOR_ASSESSMENT_FILE",

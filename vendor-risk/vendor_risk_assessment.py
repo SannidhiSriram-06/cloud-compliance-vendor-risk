@@ -126,6 +126,7 @@ def generate_markdown_report(result: dict) -> str:
     """Generates an executive Third-Party Risk Assessment markdown report."""
     md = []
     md.append(f"# Third-Party Vendor Risk Assessment: {result['vendor_name']}\n")
+    md.append("> **Notice:** This assessment evaluates a **FICTIONAL vendor** with **SIMULATED questionnaire responses** for TPRM demonstration purposes.\n")
     md.append(f"**Assessment Date:** {result['assessment_date']}  ")
     md.append(f"**Residual Risk Rating:** `{result['residual_risk_level']}`  ")
     md.append(f"**Overall Compliance Score:** `{result['compliance_score_pct']}%`  ")

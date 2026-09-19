@@ -24,10 +24,21 @@
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
       <div>
         <h2 class="text-white mb-1">🛡️ Cloud Compliance & Vendor Risk GRC Portal</h2>
-        <p class="text-muted mb-0">Automated AWS Config + Security Hub CIS Ingestion mapped to ISO 27001:2022 & NIST CSF v2.0</p>
+        <p class="text-muted mb-0">Automated AWS Config + Security Hub CIS Ingestion mapped to ISO 27001:2022 & NIST CSF v1.1</p>
       </div>
       <div>
         <span class="badge bg-success p-2">Continuous Audit Active</span>
+      </div>
+    </div>
+
+    <!-- Demonstration Disclaimer Banner -->
+    <div class="alert alert-dark border border-secondary d-flex align-items-center mb-4 p-3" role="alert">
+      <div class="me-3 fs-3">ℹ️</div>
+      <div>
+        <strong>Demonstration Prototype Notice:</strong>
+        This is a lightweight self-built demonstration dashboard, not an official or commercial GRC product.
+        Data displayed reflects continuous AWS telemetry ingested via EventBridge &amp; AWS Lambda.
+        ISO 27001:2022 and NIST CSF crosswalks are <em>analyst-assigned (indicative)</em> mappings for gap assessment and prioritize operational triage.
       </div>
     </div>
 
@@ -62,7 +73,7 @@
     <!-- Cloud Risk Register Table -->
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <span>📋 AWS Cloud Risk Register (Auto-Remediation & Compliance Mapping)</span>
+        <span>📋 AWS Cloud Risk Register (Auto-Remediation &amp; Compliance Mapping)</span>
         <span class="badge bg-secondary">{{ findings|length }} Tracked Items</span>
       </div>
       <div class="card-body p-0 table-responsive">
@@ -70,11 +81,14 @@
           <thead>
             <tr>
               <th>Severity</th>
+              <th>Status</th>
               <th>Rule / Finding Title</th>
               <th>Resource ID</th>
+              <th>Owner</th>
+              <th>Sources</th>
+              <th>CIS Benchmark</th>
               <th>ISO 27001:2022 Mapping</th>
               <th>NIST CSF Mapping</th>
-              <th>CIS Benchmark</th>
               <th>Remediation SLA</th>
               <th>Action Plan</th>
             </tr>
@@ -83,19 +97,56 @@
             {% for f in findings %}
             <tr>
               <td>
-                {% if f.Severity == 'HIGH' or f.Severity == 'CRITICAL' %}
+                {% if f.Severity == 'CRITICAL' %}
                   <span class="badge badge-high">{{ f.Severity }}</span>
-                {% else %}
+                {% elif f.Severity == 'HIGH' %}
+                  <span class="badge badge-high">{{ f.Severity }}</span>
+                {% elif f.Severity == 'MEDIUM' %}
                   <span class="badge badge-med">{{ f.Severity }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ f.Severity }}</span>
                 {% endif %}
               </td>
-              <td><strong>{{ f.Title }}</strong><br><small class="text-muted">{{ f.RiskCategory }}</small></td>
+              <td>
+                {% if f.ControlMapping == 'MAPPED' %}
+                  <span class="badge bg-success">MAPPED</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark">UNMAPPED</span>
+                {% endif %}
+              </td>
+              <td>
+                <strong>{{ f.Title }}</strong><br>
+                <small class="text-muted">{{ f.RiskCategory }}</small>
+              </td>
               <td><span class="code-tag">{{ f.ResourceID }}</span></td>
-              <td><span class="badge badge-std">{{ f.ISO_27001_2022 }}</span></td>
-              <td><span class="badge bg-secondary">{{ f.NIST_CSF }}</span></td>
-              <td><small>{{ f.CIS_AWS_Benchmark }}</small></td>
+              <td><small class="text-info">{{ f.Owner }}</small></td>
+              <td>
+                {% for src in f.Sources %}
+                  <span class="badge bg-dark border border-secondary text-light">{{ src }}</span>
+                {% endfor %}
+              </td>
+              <td>
+                <small>{{ f.CIS_AWS_Benchmark }}</small><br>
+                {% if f.CIS_Match == 'exact' %}
+                  <span class="badge bg-success" style="font-size: 0.7rem;">CIS: exact</span>
+                {% elif f.CIS_Match == 'closest' %}
+                  <span class="badge bg-secondary" style="font-size: 0.7rem;">CIS: closest</span>
+                {% endif %}
+              </td>
+              <td>
+                <span class="badge badge-std">{{ f.ISO_27001_2022 }}</span><br>
+                {% if f.ISO_NIST_Basis %}
+                  <span class="badge bg-dark border border-secondary text-muted" style="font-size: 0.65rem;">indicative</span>
+                {% endif %}
+              </td>
+              <td>
+                <span class="badge bg-secondary">{{ f.NIST_CSF }}</span><br>
+                {% if f.ISO_NIST_Basis %}
+                  <span class="badge bg-dark border border-secondary text-muted" style="font-size: 0.65rem;">indicative</span>
+                {% endif %}
+              </td>
               <td><span class="text-warning fw-bold">{{ f.RemediationSLA_Days }} Days</span></td>
-              <td><small class="text-info">{{ f.RemediationAction }}</small></td>
+              <td><small class="text-light">{{ f.RemediationAction }}</small></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -111,6 +162,9 @@
         <span class="badge bg-warning text-dark">Risk Level: {{ vendor.residual_risk_level }}</span>
       </div>
       <div class="card-body">
+        <div class="alert alert-dark border border-secondary py-2 px-3 mb-3 small text-muted">
+          <em>Note: This card evaluates a <strong>fictional vendor</strong> with <strong>simulated questionnaire responses</strong> for TPRM demonstration purposes.</em>
+        </div>
         <div class="row mb-3">
           <div class="col-md-4">
             <p><strong>Compliance Score:</strong> <span class="fs-5 text-success">{{ vendor.compliance_score_pct }}%</span></p>

@@ -1,5 +1,7 @@
 # Third-Party Vendor Risk Assessment: Apex Cloud Analytics Inc.
 
+> **Notice:** This assessment evaluates a **FICTIONAL vendor** with **SIMULATED questionnaire responses** for TPRM demonstration purposes.
+
 **Assessment Date:** 2026-09-19  
 **Residual Risk Rating:** `MEDIUM`  
 **Overall Compliance Score:** `74.56%`  
