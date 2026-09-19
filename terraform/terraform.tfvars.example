@@ -1,0 +1,5 @@
+aws_region                       = "us-east-1"
+project_name                     = "cloud-compliance-demo"
+environment                      = "sandbox"
+enable_vulnerable_demo_resources = true
+cis_benchmark_version            = "1.4.0"

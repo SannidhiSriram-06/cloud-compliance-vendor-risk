@@ -1,0 +1,57 @@
+{
+  "version": "0",
+  "id": "12345678-1234-1234-1234-123456789012",
+  "detail-type": "Security Hub Findings - Imported",
+  "source": "aws.securityhub",
+  "account": "123456789012",
+  "time": "2026-09-19T05:30:00Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:s3:::cloud-compliance-demo-public-demo-xyz"
+  ],
+  "detail": {
+    "findings": [
+      {
+        "SchemaVersion": "2018-10-08",
+        "Id": "arn:aws:securityhub:us-east-1:123456789012:subscription/cis-aws-foundations-benchmark/v/1.4.0/2.1.5/finding/998877",
+        "ProductArn": "arn:aws:securityhub:us-east-1::product/aws/securityhub",
+        "GeneratorId": "cis-aws-foundations-benchmark/v/1.4.0/2.1.5",
+        "AwsAccountId": "123456789012",
+        "Types": [
+          "Software and Configuration Checks/Industry and Regulatory Standards/CIS AWS Foundations Benchmark"
+        ],
+        "CreatedAt": "2026-09-19T05:30:00.000Z",
+        "UpdatedAt": "2026-09-19T05:30:00.000Z",
+        "Severity": {
+          "Label": "HIGH"
+        },
+        "Title": "2.1.5 Ensure that S3 Buckets are configured with 'Block Public Access'",
+        "Description": "The S3 bucket cloud-compliance-demo-public-demo-xyz has public access block disabled and allows public read access.",
+        "Remediation": {
+          "Recommendation": {
+            "Text": "For instructions on enabling S3 Block Public Access, see the AWS documentation.",
+            "Url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html"
+          }
+        },
+        "ProductFields": {
+          "StandardsArn": "arn:aws:securityhub:::standards/cis-aws-foundations-benchmark/v/1.4.0",
+          "StandardsControlArn": "arn:aws:securityhub:us-east-1:123456789012:control/cis-aws-foundations-benchmark/v/1.4.0/2.1.5",
+          "RuleId": "s3-bucket-public-read-prohibited"
+        },
+        "Resources": [
+          {
+            "Type": "AwsS3Bucket",
+            "Id": "arn:aws:s3:::cloud-compliance-demo-public-demo-xyz",
+            "Partition": "aws",
+            "Region": "us-east-1"
+          }
+        ],
+        "Compliance": {
+          "Status": "FAILED"
+        },
+        "WorkflowState": "NEW",
+        "RecordState": "ACTIVE"
+      }
+    ]
+  }
+}

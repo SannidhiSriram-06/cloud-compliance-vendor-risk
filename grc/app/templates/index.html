@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Compliance & GRC Risk Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .card { background-color: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 20px; }
+    .card-header { background-color: #21262d; border-bottom: 1px solid #30363d; font-weight: 600; }
+    .stat-val { font-size: 2rem; font-weight: 700; }
+    .badge-high { background-color: #da3633; color: white; }
+    .badge-med { background-color: #d29922; color: #0d1117; font-weight: 600; }
+    .badge-std { background-color: #1f6feb; color: white; }
+    .table-dark-custom { background-color: #161b22; color: #c9d1d9; }
+    .table-dark-custom th { background-color: #21262d; border-color: #30363d; }
+    .table-dark-custom td { border-color: #30363d; vertical-align: middle; font-size: 0.88rem; }
+    .code-tag { background-color: #0d1117; padding: 2px 6px; border-radius: 4px; border: 1px solid #30363d; font-family: monospace; }
+  </style>
+</head>
+<body class="p-4">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary">
+      <div>
+        <h2 class="text-white mb-1">🛡️ Cloud Compliance & Vendor Risk GRC Portal</h2>
+        <p class="text-muted mb-0">Automated AWS Config + Security Hub CIS Ingestion mapped to ISO 27001:2022 & NIST CSF v2.0</p>
+      </div>
+      <div>
+        <span class="badge bg-success p-2">Continuous Audit Active</span>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="text-muted">Total Active Cloud Findings</div>
+          <div class="stat-val text-white">{{ stats.total }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="text-muted">Critical / High Violations</div>
+          <div class="stat-val text-danger">{{ stats.high }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="text-muted">Medium Violations</div>
+          <div class="stat-val text-warning">{{ stats.medium }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="text-muted">Average Risk Score</div>
+          <div class="stat-val text-info">{{ stats.avg_score }}/10</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud Risk Register Table -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>📋 AWS Cloud Risk Register (Auto-Remediation & Compliance Mapping)</span>
+        <span class="badge bg-secondary">{{ findings|length }} Tracked Items</span>
+      </div>
+      <div class="card-body p-0 table-responsive">
+        <table class="table table-dark-custom table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Rule / Finding Title</th>
+              <th>Resource ID</th>
+              <th>ISO 27001:2022 Mapping</th>
+              <th>NIST CSF Mapping</th>
+              <th>CIS Benchmark</th>
+              <th>Remediation SLA</th>
+              <th>Action Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in findings %}
+            <tr>
+              <td>
+                {% if f.Severity == 'HIGH' or f.Severity == 'CRITICAL' %}
+                  <span class="badge badge-high">{{ f.Severity }}</span>
+                {% else %}
+                  <span class="badge badge-med">{{ f.Severity }}</span>
+                {% endif %}
+              </td>
+              <td><strong>{{ f.Title }}</strong><br><small class="text-muted">{{ f.RiskCategory }}</small></td>
+              <td><span class="code-tag">{{ f.ResourceID }}</span></td>
+              <td><span class="badge badge-std">{{ f.ISO_27001_2022 }}</span></td>
+              <td><span class="badge bg-secondary">{{ f.NIST_CSF }}</span></td>
+              <td><small>{{ f.CIS_AWS_Benchmark }}</small></td>
+              <td><span class="text-warning fw-bold">{{ f.RemediationSLA_Days }} Days</span></td>
+              <td><small class="text-info">{{ f.RemediationAction }}</small></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Third-Party Vendor Risk Assessment Section -->
+    {% if vendor %}
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>🏢 Third-Party Vendor Risk Assessment (TPRM): {{ vendor.vendor_name }}</span>
+        <span class="badge bg-warning text-dark">Risk Level: {{ vendor.residual_risk_level }}</span>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <p><strong>Compliance Score:</strong> <span class="fs-5 text-success">{{ vendor.compliance_score_pct }}%</span></p>
+            <p><strong>Assessment Decision:</strong> <span class="badge bg-warning text-dark">{{ vendor.recommended_decision }}</span></p>
+          </div>
+          <div class="col-md-8">
+            <h6>Category Breakdown:</h6>
+            <div class="row g-2">
+              {% for cat, data in vendor.category_breakdown.items() %}
+              <div class="col-sm-6">
+                <div class="p-2 border border-secondary rounded">
+                  <div class="d-flex justify-content-between">
+                    <small>{{ cat }}</small>
+                    <small class="fw-bold">{{ data.score_pct }}%</small>
+                  </div>
+                  <div class="progress mt-1" style="height: 6px;">
+                    <div class="progress-bar {% if data.score_pct >= 80 %}bg-success{% elif data.score_pct >= 60 %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ data.score_pct }}%"></div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <h6>Identified Third-Party Deficiencies:</h6>
+        <ul class="list-group list-group-flush border border-secondary rounded">
+          {% for gap in vendor.critical_gaps %}
+          <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge bg-danger me-2">{{ gap.severity }}</span>
+              <span><strong>[{{ gap.question_id }}]</strong> {{ gap.question }}</span>
+              <div class="text-muted small mt-1">Control: {{ gap.required_standard }} | Vendor Answer: <span class="text-warning">{{ gap.response }}</span></div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</body>
+</html>

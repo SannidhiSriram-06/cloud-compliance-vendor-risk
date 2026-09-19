@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  grc-dashboard:
+    image: python:3.11-slim
+    container_name: open-grc-risk-register
+    working_dir: /app
+    volumes:
+      - ./app:/app
+      - ../lambda:/data/lambda:ro
+      - ../vendor-risk:/data/vendor-risk:ro
+    environment:
+      - FLASK_ENV=production
+      - RISK_REGISTER_FILE=/data/lambda/sample_risk_register.json
+      - VENDOR_ASSESSMENT_FILE=/data/vendor-risk/sample_vendor_assessment.json
+    command: >
+      sh -c "pip install --no-cache-dir flask tabulate && python app.py"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
