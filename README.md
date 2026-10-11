@@ -5,7 +5,7 @@
 [![AWS Config](https://img.shields.io/badge/AWS-Config-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/config/)
 [![Compliance](https://img.shields.io/badge/GRC-ISO_27001%20%7C%20NIST_CSF-0052CC)](#compliance-framework-crosswalk)
 
-An enterprise-grade Infrastructure-as-Code (IaC) security governance and Third-Party Risk Management (TPRM) lab. This repository provisions continuous compliance auditing across AWS using **AWS Config** and **AWS Security Hub** (CIS AWS Foundations Benchmark v1.4.0 only), automatically ingests failed controls via **Amazon EventBridge** and **AWS Lambda**, enriches them with **ISO 27001:2022** and **NIST CSF v1.1** control crosswalks, updates a live GRC Risk Register (JSON/CSV), and simulates an end-to-end Vendor Risk Assessment scoring engine.
+A sandbox Infrastructure-as-Code (IaC) security governance and Third-Party Risk Management (TPRM) lab. This repository provisions continuous compliance auditing across AWS using **AWS Config** and **AWS Security Hub** (CIS AWS Foundations Benchmark v1.4.0 only), automatically ingests failed controls via **Amazon EventBridge** and **AWS Lambda**, enriches them with **ISO 27001:2022** and **NIST CSF v1.1** control crosswalks, updates a live GRC Risk Register (JSON/CSV), and simulates an end-to-end Vendor Risk Assessment scoring engine.
 
 ---
 
